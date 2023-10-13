@@ -25,6 +25,8 @@ Based on this article: https://daquinoaldo.medium.com/traefik-docker-oauth-a-fre
     # should redirect to https, requires login
     open http://admin.your-domain.com
 
+    # logout url
+    open https://oauth.your-domain.com/_oauth/logout
 
 ## redirect URL
 
@@ -39,4 +41,10 @@ Add these rows to /etc/hosts
     127.0.0.1 oauth.your-domain.com
     127.0.0.1 app.your-domain.com
     127.0.0.1 admin.your-domain.com
+
+## Roadmap
+
+### enable JWT on all endpoints 
+
+This isn't possible with the current [thomseddon/traefik-forward-auth](https://github.com/thomseddon/traefik-forward-auth), it is probably possible with [oauth2-proxy](https://github.com/oauth2-proxy/oauth2-proxy). Also see [this article](https://joeeey.com/blog/selfhosting-sso-with-traefik-oauth2-proxy-part-2/) and [this repo](https://github.com/jonananas/traefik-oauth2-proxy/blob/main/docker-compose.yml).
 
