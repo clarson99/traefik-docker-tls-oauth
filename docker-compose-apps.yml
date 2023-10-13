@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  # a not exposed service
+  db:
+    image: mongo
+  # a publicly exposed app, using https
+  app:
+    image: traefik/whoami
+    networks:
+      - default   # to reeach the db
+      - traefik   # to be reached from traefik
+    labels:
+      # enable traefik and tls using letsencrypt
+      traefik.enable: "true"
+      traefik.http.routers.app.tls: "true"
+      traefik.http.routers.app.tls.certresolver: letsencrypt
+      # serve it on https://app.your-domain.com
+      traefik.http.routers.app.rule: Host(`app.${DOMAIN}`)
+  
+  # a protected admin panel, accessible using https
+  admin:
+    image: traefik/whoami
+    networks:
+      - default   # to reeach the db
+      - traefik   # to be reached from traefik
+    labels:
+      # enable traefik and tls using letsencrypt
+      traefik.enable: "true"
+      traefik.http.routers.admin.tls: "true"
+      traefik.http.routers.admin.tls.certresolver: letsencrypt
+      # serve it on https://admin.your-domain.com
+      traefik.http.routers.admin.rule: Host(`admin.${DOMAIN}`)
+      # protect with oauth
+      traefik.http.routers.admin.middlewares: oauth
+
+# make the traefik network available for these containers
+networks:
+  traefik:
+    external:
+      name: traefik
+
